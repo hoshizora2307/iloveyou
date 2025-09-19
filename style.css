@@ -15,17 +15,33 @@ html, body {
     overflow: hidden;
 }
 
+/* マトリックス背景 */
+#matrix-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* コンテンツの背景に配置 */
+}
+
+/* コンテンツはCanvasの上に表示 */
+#terminal, #progress-container, #final-message {
+    position: relative;
+    z-index: 2;
+}
+
 #terminal {
     padding: 10px;
     height: 100%;
     box-sizing: border-box;
     overflow-y: hidden;
-    position: relative;
 }
 
 #output {
     white-space: pre-wrap;
     word-break: break-all;
+    text-shadow: 0 0 5px var(--hacker-green);
 }
 
 #cursor {
@@ -38,9 +54,7 @@ html, body {
 }
 
 @keyframes blink {
-    50% {
-        background-color: transparent;
-    }
+    50% { background-color: transparent; }
 }
 
 #progress-container {
@@ -60,13 +74,14 @@ html, body {
     width: 100%;
     height: 20px;
     border: 1px solid var(--hacker-green);
+    background: rgba(0,0,0,0.5);
 }
 
 #progress-bar-inner {
     width: 0%;
     height: 100%;
     background-color: var(--hacker-green);
-    transition: width 4s linear; /* 4秒かけてバーが伸びる */
+    transition: width 4s linear;
 }
 
 #final-message {
@@ -74,10 +89,16 @@ html, body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 3rem;
+    width: 90%;
+    max-width: 600px;
+    font-size: 1.5rem; /* スマートフォンで見やすいように調整 */
+    line-height: 1.6;
     color: var(--hacker-red);
     text-shadow: 0 0 10px var(--hacker-red);
     text-align: center;
+    background-color: rgba(0, 0, 0, 0.8); /* 文字が読みやすいように背景を少し暗くする */
+    padding: 20px;
+    border: 1px solid var(--hacker-red);
     animation: fadeIn 1s ease-in;
 }
 
