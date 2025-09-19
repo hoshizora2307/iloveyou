@@ -5,7 +5,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressLabel = document.getElementById('progress-label');
     const progressBarInner = document.getElementById('progress-bar-inner');
     const finalMessage = document.getElementById('final-message');
+    
+    // --- マトリックス背景の描画処理 ---
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
 
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+    const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const nums = '0123456789';
+    const alphabet = katakana + latin + nums;
+
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const rainDrops = [];
+
+    for (let x = 0; x < columns; x++) {
+        rainDrops[x] = 1;
+    }
+
+    const drawMatrix = () => {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#0F0';
+        ctx.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < rainDrops.length; i++) {
+            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                rainDrops[i] = 0;
+            }
+            rainDrops[i]++;
+        }
+    };
+
+    // --- ハッキングシーケンスの定義 ---
     const sequence = [
         { action: 'type', text: '> Bypassing security protocols...', delay: 50 },
         { action: 'delay', duration: 1000 },
@@ -15,9 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
         { action: 'delay', duration: 500 },
         { action: 'fast-scroll', lines: 30, duration: 2000 },
         { action: 'delay', duration: 500 },
-        { action: 'progress', label: 'DECRYPTING FIREWALL...', duration: 4000 },
+        { action: 'progress', label: 'DECRYPTING ALL ENCRYPTION...', duration: 4000 },
         { action: 'delay', duration: 1000 },
-        { action: 'final-message', text: 'ACCESS GRANTED' }
+        // ▼▼▼ 最終メッセージをご指定のものに変更 ▼▼▼
+        { 
+            action: 'final-message', 
+            text: 'あなたのネットワークに侵入しました。\nあらゆる暗号を解読しました。\n今後、あなたのパソコンやスマートフォンを監視することが可能です。\n\n解除を希望するならばinfo@shigakogen.onlineまで連絡を。\nもちろん何かを要求することはない。' 
+        }
     ];
 
     function typeText(element, text, delay, callback) {
@@ -54,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function showProgress(label, duration, callback) {
-        output.innerHTML = ''; // 画面をクリア
+        output.innerHTML = '';
         cursor.style.display = 'none';
         progressContainer.classList.remove('hidden');
         progressLabel.textContent = label;
@@ -70,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showFinalMessage(text, callback) {
-        finalMessage.textContent = text;
+        finalMessage.innerText = text; // innerHTMLではなくinnerTextを使い、改行を反映
         finalMessage.classList.remove('hidden');
         if (callback) callback();
     }
@@ -99,5 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    runSequence();
+    // アプリの実行開始
+    setInterval(drawMatrix, 33); // マトリックス背景を常に描画
+    runSequence(); // ハッキングシーケンスを開始
 });
